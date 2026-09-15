@@ -3,7 +3,7 @@
 ## Student Details
 
 - **Full Name:** `Riley Whitford`
-- **CCID:** `<whitfor1`
+- **CCID:** `whitfor1`
 
 ## References and Resources
 
