@@ -27,6 +27,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.height
 
 @Composable
 fun CityListScreen(
@@ -36,6 +38,7 @@ fun CityListScreen(
     // For lab implementation, want to check for duplicates, so added onAddCity
     // as boolean type
     onAddCity: (City) -> Boolean,
+    onDeleteCity: (City) -> Unit,
     modifier: Modifier = Modifier
 ) {
     // newCityName stores the city name typed by the user.
@@ -52,7 +55,18 @@ fun CityListScreen(
     // added new var to remember selected city to be updated
     var selectedCity by remember {mutableStateOf<City?>(null) }
 
-    Column(modifier = modifier.fillMaxSize()) {
+    Column(modifier = modifier
+        .fillMaxSize()
+        .clickable(
+            indication = null,
+            interactionSource = remember { MutableInteractionSource() }
+        ) {
+            selectedCity = null
+            newCityName = ""
+            newProvinceName = ""
+            errorMessage = null
+            }
+        ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.End
@@ -60,6 +74,12 @@ fun CityListScreen(
             FloatingActionButton(
                 modifier = Modifier.padding(16.dp),
                 onClick = {
+                    if (showAddCityFields) {
+                        newCityName = ""
+                        newProvinceName = ""
+                        errorMessage = null
+                        selectedCity = null
+                    }
                     showAddCityFields = !showAddCityFields
                 }
             ) {
@@ -115,10 +135,39 @@ fun CityListScreen(
                         }
                     }
                 ) {
-                    Text("Add City")
+                    Text(
+                        if (selectedCity == null) "Add City"
+                        else "Update City"
+                    )
                 }
             }
 
+            // Secondary row for the delete button and function
+            // Allows user to delete an entry from the list
+            if (selectedCity != null) {
+                Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
+                ) {
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    Button(
+                        onClick = {
+                            selectedCity?.let { city ->
+                                onDeleteCity(city)
+                                selectedCity = null
+                                newCityName = ""
+                                newProvinceName = ""
+                                errorMessage = null
+                                showAddCityFields = false
+                            }
+                        }
+                    ) {
+                        Text("Delete City")
+                    }
+                }
+            }
             if (errorMessage != null) {
                 Text(
                     text = errorMessage!!,
@@ -180,7 +229,8 @@ fun CityListScreenPreview() {
                 City("Vancouver", "BC"),
                 City("Calgary", "AB")
             ),
-            onAddCity = { true }
+            onAddCity = { true },
+            onDeleteCity = {}
         )
     }
 }

@@ -7,7 +7,12 @@
 
 ## References and Resources
 
-List any resources used here, or simply put `N/A` if not applicable.
+See LLM.md for LLM reference.  
+Modifier | Android Studio | Kotlin | https://developer.android.com/reference/kotlin/androidx/compose/ui/Modifier  
+Disabling Click Indications | Medium | https://narendranathchatterjee.medium.com/disabling-click-indications-app-wide-in-jetpack-compose-4a7b39f900f4 
+Null Safety | Kotlinlang | https://kotlinlang.org/docs/null-safety.html#check-for-null-with-the-if-conditional  
+ 
+
 
 ## Verbal Collaboration
 
