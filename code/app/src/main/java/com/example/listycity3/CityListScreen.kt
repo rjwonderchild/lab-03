@@ -39,6 +39,7 @@ fun CityListScreen(
     // as boolean type
     onAddCity: (City) -> Boolean,
     onDeleteCity: (City) -> Unit,
+    onUpdateCity: (City, City) -> Boolean,
     modifier: Modifier = Modifier
 ) {
     // newCityName stores the city name typed by the user.
@@ -116,21 +117,44 @@ fun CityListScreen(
                     onClick = {
                         if (newCityName.isNotBlank() && newProvinceName.isNotBlank()) {
 
-                            val adding = onAddCity(
-                                City(
+                            if (selectedCity == null) {
+                                val adding = onAddCity(
+                                    City(
+                                        name = newCityName,
+                                        province = newProvinceName
+                                    )
+                                )
+
+                                if (adding) {
+
+                                    newCityName = ""
+                                    newProvinceName = ""
+                                    showAddCityFields = false
+                                    errorMessage = null
+                                } else {
+                                    errorMessage = "This city & province in list!"
+                                }
+                            } else {
+
+                                val updatedCity = City(
                                     name = newCityName,
                                     province = newProvinceName
                                 )
-                            )
 
-                            if (adding) {
+                                val updated = onUpdateCity(
+                                    selectedCity!!,
+                                    updatedCity
+                                )
 
-                                newCityName = ""
-                                newProvinceName = ""
-                                showAddCityFields = false
-                                errorMessage = null
-                            } else {
-                                errorMessage = "This city & province in list!"
+                                if (updated) {
+                                    selectedCity = null
+                                    newCityName = ""
+                                    newProvinceName = ""
+                                    showAddCityFields = false
+                                    errorMessage = null
+                                } else {
+                                    errorMessage = "This city & province in list!"
+                                }
                             }
                         }
                     }
@@ -230,7 +254,8 @@ fun CityListScreenPreview() {
                 City("Calgary", "AB")
             ),
             onAddCity = { true },
-            onDeleteCity = {}
+            onDeleteCity = {},
+            onUpdateCity = {_, _ -> true}
         )
     }
 }

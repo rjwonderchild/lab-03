@@ -15,6 +15,17 @@ class CityRepository {
     // check, which makes refactoring, maintainability, and readability
     // a pain.
 
+    private fun doesCityExist(city: City, ignoreCity: City? = null): Boolean {
+        val cityNameTrimmed = city.name.trim()
+        val provinceNameTrimmed = city.province.trim()
+
+        return _cities.any { existingCity ->
+            existingCity != ignoreCity &&
+                existingCity.name.equals(cityNameTrimmed, ignoreCase = true) &&
+                        existingCity.province.equals(provinceNameTrimmed, ignoreCase = true)
+        }
+    }
+
 
     // Switch from City to Boolean return logic, this is for checking for
     // objects already stored in the list and prevent user duplication
@@ -22,12 +33,7 @@ class CityRepository {
         val cityNameTrimmed = city.name.trim()
         val provinceNameTrimmed = city.province.trim()
 
-        val cityInList = _cities.any { existingCity ->
-            existingCity.name.equals(cityNameTrimmed, ignoreCase = true) &&
-                    existingCity.province.equals(provinceNameTrimmed, ignoreCase = true)
-        }
-
-        if (cityNameTrimmed.isBlank() || provinceNameTrimmed.isBlank() || cityInList ) {
+        if (cityNameTrimmed.isBlank() || provinceNameTrimmed.isBlank() || doesCityExist(city)) {
             return false
         }
 
@@ -47,11 +53,22 @@ class CityRepository {
     }
 
     // Function from Lab 3 hint suggestion
-    fun updateCity(oldCity: City, updatedCity: City) {
+    fun updateCity(oldCity: City, updatedCity: City): Boolean {
         val index = _cities.indexOf(oldCity)
-        if (index != -1) {
-            _cities[index] = updatedCity
+        if (index == -1) {
+            return false
         }
+
+        if (doesCityExist(updatedCity, ignoreCity = oldCity)) {
+            return true
+        }
+
+        _cities[index] = City(
+            name = updatedCity.name.trim(),
+            province = updatedCity.province.trim()
+        )
+
+        return true
     }
 }
 

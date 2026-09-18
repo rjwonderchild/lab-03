@@ -205,3 +205,110 @@ Row = puts items side by side
 Column = stacks items vertically
 
 So the delete button should not be inside the same Row as the fields if you want it underneath them.
+  
+Prompt | September 17, 2026 | ChatGPT:  
+Chat, I have some type bug mismatch when implementing my updateCity function. I have it set for type boolean, but it shows '???' in the error log  
+window. See the current iteration here: **INSERTED CODE**  
+
+  
+Yes. There are two type-related issues in the files you uploaded.
+
+The main one is in CityListScreen.
+
+You currently declare:
+
+onUpdateCity: (City) -> Boolean,
+
+which means:
+
+“This callback accepts one City and returns a Boolean.”
+
+But later you call it with two City objects:
+
+val updated = onUpdateCity(
+    selectedCity!!,
+    updatedCity
+)
+
+So the callback signature needs to accept two City parameters:
+
+onUpdateCity: (City, City) -> Boolean,
+
+That matches what you're already doing in MainActivity, where your lambda has oldCity and updatedCity.
+
+So change this:
+
+onUpdateCity: (City) -> Boolean,
+
+to:
+
+onUpdateCity: (City, City) -> Boolean,
+
+Your call here will then make sense:
+
+val updated = onUpdateCity(
+    selectedCity!!,
+    updatedCity
+)
+
+because the two parameters represent:
+
+selectedCity!!  → old City
+updatedCity     → replacement City
+
+There is also a second error in your Preview.
+
+Your CityListScreenPreview() currently provides:
+
+onAddCity = { true },
+onDeleteCity = {}
+
+but does not provide the newly required onUpdateCity callback.
+
+Add a dummy two-argument callback for the preview:
+
+onUpdateCity = { _, _ -> true }
+
+So the bottom should look like:
+
+CityListScreen(
+    cities = listOf(
+        City("Edmonton", "AB"),
+        City("Vancouver", "BC"),
+        City("Calgary", "AB")
+    ),
+    onAddCity = { true },
+    onDeleteCity = {},
+    onUpdateCity = { _, _ -> true }
+)
+
+The _ means:
+
+“This parameter exists, but I don't need to use it.”
+
+One final thing to verify in CityRepository: your updateCity() must also return Boolean. If it's still the older version:
+
+fun updateCity(oldCity: City, updatedCity: City) {
+
+then MainActivity will still have a mismatch because CityListScreen expects the update callback to return a Boolean.
+
+It should have the general shape:
+
+fun updateCity(oldCity: City, updatedCity: City): Boolean {
+    // ...
+}
+
+So the types should line up all the way through:
+
+CityListScreen:
+(City, City) -> Boolean
+        ↓
+MainActivity:
+{ oldCity, updatedCity ->
+    cityRepository.updateCity(oldCity, updatedCity)
+}
+        ↓
+CityRepository:
+fun updateCity(oldCity: City, updatedCity: City): Boolean
+
+That should resolve the type mismatch chain.
