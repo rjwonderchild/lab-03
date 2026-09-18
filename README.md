@@ -6,7 +6,7 @@
 - **CCID:** `whitfor1`
 
 ## GIF EXAMPLE
-![MainActivity.kt in action showing add city, delete city, update city, and some base filters](https://github.com/rjwonderchild/cmput301-fall2026-lab-02/blob/main/ListyCity_Example.gif)
+![MainActivity.kt in action showing add city, delete city, update city, and some base filters](https://github.com/rjwonderchild/lab-03/blob/main/ListyCity_Lab3_demo.gif)
 
 ## References and Resources
 
