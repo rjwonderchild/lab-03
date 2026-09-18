@@ -5,11 +5,14 @@
 - **Full Name:** `Riley Whitford`
 - **CCID:** `whitfor1`
 
+## GIF EXAMPLE
+![MainActivity.kt in action showing add city, delete city, update city, and some base filters](https://github.com/rjwonderchild/cmput301-fall2026-lab-02/blob/main/ListyCity_Example.gif)
+
 ## References and Resources
 
 See LLM.md for LLM reference.  
 Modifier | Android Studio | Kotlin | https://developer.android.com/reference/kotlin/androidx/compose/ui/Modifier  
-Disabling Click Indications | Medium | https://narendranathchatterjee.medium.com/disabling-click-indications-app-wide-in-jetpack-compose-4a7b39f900f4 
+Disabling Click Indications | Medium | https://narendranathchatterjee.medium.com/disabling-click-indications-app-wide-in-jetpack-compose-4a7b39f900f4   
 Null Safety | Kotlinlang | https://kotlinlang.org/docs/null-safety.html#check-for-null-with-the-if-conditional  
  
 
